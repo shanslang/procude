@@ -1,0 +1,254 @@
+----------------------------------------------------------------------
+-- 版权：2011
+-- 时间：2011-09-1
+-- 用途：实卡充值
+----------------------------------------------------------------------
+
+USE [THTreasureDB]
+GO
+
+IF EXISTS (SELECT * FROM DBO.SYSOBJECTS WHERE ID = OBJECT_ID(N'[dbo].NET_PW_FilledLivcard') AND OBJECTPROPERTY(ID, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].NET_PW_FilledLivcard
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+SET ANSI_NULLS ON 
+GO
+
+----------------------------------------------------------------------------------
+-- 实卡充值
+CREATE PROC NET_PW_FilledLivcard
+	@dwOperUserID		INT,						--	操作用户
+	@UserPassword		nvarchar(32),				--  操作用户密码
+	@strMachineID		nvarchar(32),				--  操作机器码
+	@strSerialID		NVARCHAR(32),				--	会员卡号
+
+	@strClientIP		NVARCHAR(15),				--	充值地址
+	@strErrorDescribe	NVARCHAR(127) OUTPUT		--	输出信息
+WITH ENCRYPTION AS
+
+-- 属性设置
+SET NOCOUNT ON
+
+-- 实卡信息
+DECLARE @CardID INT
+DECLARE @SerialID NVARCHAR(15)
+DECLARE @Password NCHAR(32)
+DECLARE @CardTypeID INT
+DECLARE @CardPrice DECIMAL(18,2)
+DECLARE @Currency DECIMAL(18,2)
+DECLARE @Score BIGINT
+DECLARE @ValidDate DATETIME
+DECLARE @ApplyDate DATETIME
+DECLARE @UseRange INT
+
+-- 帐号资料
+DECLARE @Accounts NVARCHAR(31)
+DECLARE @GameID INT
+DECLARE @UserID INT
+DECLARE @SpreaderID INT
+DECLARE @Nullity TINYINT
+DECLARE @StunDown TINYINT
+DECLARE @BeforeCurrency DECIMAL(18,2)
+DECLARE @CurInsure BIGINT
+DECLARE @FillCount INT
+
+-- 执行逻辑
+BEGIN
+	if len(@strSerialID) < 15
+	begin
+		declare @ChannelID int
+		set @ChannelID = cast(@strSerialID as int)
+		declare @Ret int
+		exec @Ret=THAccountsDB.dbo.GSP_MB_ChannelBinding @dwOperUserID,@ChannelID,@UserPassword,@strClientIP,@strMachineID,@strErrorDescribe output
+		return @Ret
+	end
+	DECLARE @ShareID INT
+	SET @ShareID=1		-- 1 实卡
+	
+	-- 卡号查询
+	SELECT	@CardID=CardID,@SerialID=SerialID,@Password=[Password],@CardTypeID=CardTypeID,
+			@CardPrice=CardPrice,@Currency=Currency,@Score=Score,@ValidDate=ValidDate,
+			@ApplyDate=ApplyDate,@UseRange=UseRange,@Nullity=Nullity
+	FROM LivcardAssociator WHERE SerialID=@strSerialID collate Chinese_PRC_CS_AS and ApplyDate is null
+
+	-- 验证卡信息
+	IF @CardID IS NULL
+	BEGIN
+		SET @strErrorDescribe=N'抱歉！您要充值的卡号不存在。如有疑问请联系客服中心。'
+		RETURN 101
+	END	
+
+	--IF @strPassword=N'' OR @strPassword IS NULL OR @Password<>@strPassword
+	--BEGIN
+		--SET @strErrorDescribe=N'抱歉！充值失败，请检查卡号或密码是否填写正确。如有疑问请联系客服中心。'
+		--RETURN 102
+	--END
+	
+	
+
+	IF @ApplyDate IS NOT NULL
+	BEGIN
+		SET @strErrorDescribe=N'抱歉！该充值卡已被使用，请换一张再试。如有疑问请联系客服中心。'
+		RETURN 103
+	END
+
+	IF @Nullity=1
+	BEGIN
+		SET @strErrorDescribe=N'抱歉！该会员卡已被禁用。'
+		RETURN 104
+	END
+
+	IF @ValidDate < GETDATE()
+	BEGIN
+		SET @strErrorDescribe=N'抱歉！该会员卡已经过期。'
+		RETURN 105
+	END
+	
+	declare @record int
+	select top 1 @record=[RecordID] FROM [THRecordDB].[dbo].[RecordGrantGameScore](nolock) where [UserID] = @dwOperUserID and [Reason] like '完善资料%' 
+	if @CardTypeID = 5 and @record is not null
+	begin
+		SET @strErrorDescribe=N'抱歉！手机绑定已赠送。'
+		RETURN 111
+	end
+	
+	-- 验证用户
+	SELECT @UserID=UserID,@GameID=GameID,@Accounts=Accounts,@Nullity=Nullity,@StunDown=StunDown,@SpreaderID=SpreaderID
+	FROM THAccountsDB.dbo.AccountsInfo
+	WHERE UserID=@dwOperUserID
+
+	IF @UserID IS NULL
+	BEGIN
+		SET @strErrorDescribe=N'抱歉！您要充值的用户账号不存在。'
+		RETURN 201
+	END
+
+	IF @Nullity=1
+	BEGIN
+		SET @strErrorDescribe=N'抱歉！您要充值的用户账号暂时处于冻结状态，请联系客户服务中心了解详细情况。'
+		RETURN 202
+	END
+
+	IF @StunDown<>0
+	BEGIN
+		SET @strErrorDescribe=N'抱歉！您要充值的用户账号使用了安全关闭功能，必须重新开通后才能继续使用。'
+		RETURN 203
+	END
+
+	-- 实卡使用范围
+	-- 新注册用户
+	IF @UseRange=1
+	BEGIN
+		SELECT @FillCount=COUNT(DetailID) FROM ShareDetailInfo WHERE UserID=@UserID AND CardTypeID=@CardTypeID
+		IF @FillCount>0
+		BEGIN
+			SET @strErrorDescribe=N'抱歉！该会员卡只适合新注册的用户使用。'
+			RETURN 301
+		END 
+	END
+
+	-- 第一次充值用户
+	IF @UseRange=2
+	BEGIN
+		SELECT @FillCount=COUNT(DetailID) FROM ShareDetailInfo WHERE UserID=@UserID
+		IF @FillCount>0
+		BEGIN
+			SET @strErrorDescribe=N'抱歉！该会员卡只适合第一次充值的用户使用。'
+			RETURN 302
+		END
+	END
+
+	-- 充值货币
+	SELECT @BeforeCurrency=Currency FROM UserCurrencyInfo WHERE UserID=@UserID
+	IF @BeforeCurrency IS NULL SET @BeforeCurrency=0
+
+	UPDATE UserCurrencyInfo SET Currency=Currency+@Currency WHERE UserID=@UserID
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT UserCurrencyInfo(UserID,Currency) VALUES(@UserID,@Currency)
+	END
+
+	-- 写卡充值记录
+	IF @Currency<>0
+	BEGIN
+		INSERT INTO ShareDetailInfo(OperUserID,ShareID,UserID,GameID,Accounts,SerialID,
+				CardTypeID,OrderAmount,Currency,BeforeCurrency,PayAmount,IPAddress,ApplyDate)
+		VALUES(@dwOperUserID,@ShareID,@UserID,@GameID,@Accounts,@SerialID,@CardTypeID,
+				@CardPrice,@Currency,@BeforeCurrency,@CardPrice,@strClientIP,GETDATE())
+	END
+
+	-- 充值金币
+	SELECT @CurInsure=InsureScore FROM GameScoreInfo WHERE UserID=@UserID
+	IF @CurInsure IS NULL SET @CurInsure=0
+
+	UPDATE GameScoreInfo SET InsureScore=InsureScore+@Score WHERE UserID=@UserID
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT GameScoreInfo(UserID,InsureScore,RegisterIP,LastLogonIP)
+		VALUES (@UserID,@Score,@strClientIP,@strClientIP)
+	END
+
+	-- 写赠送金币记录
+	IF @Score<>0
+	BEGIN
+		DECLARE @CardName NVARCHAR(16)
+		SELECT @CardName=CardName FROM GlobalLivcard WHERE CardTypeID=@CardTypeID
+		IF @CardName IS NULL SET @CardName=N''
+		INSERT INTO THRecordDBLink.THRecordDB.dbo.RecordGrantTreasure(MasterID,ClientIP,CollectDate,UserID,CurGold,AddGold,Reason)
+		VALUES (1,@strClientIP,GETDATE(),@UserID,@CurInsure,@Score,@CardName)
+	END
+
+	--------------------------------------------------------------------------------
+
+	-- 推广系统
+	IF @SpreaderID<>0
+	BEGIN
+		DECLARE @Rate DECIMAL(18,2)
+		DECLARE @GrantScore BIGINT
+		DECLARE @Note NVARCHAR(512)
+		SELECT @Rate=FillGrantRate FROM GlobalSpreadInfo
+		IF @Rate IS NULL
+		BEGIN
+			SET @Rate=0.1
+		END
+		-- 货币与金币的汇率
+		DECLARE @GoldRate INT
+		SELECT @GoldRate=StatusValue FROM THAccountsDBLink.THAccountsDB.dbo.SystemStatusInfo WHERE StatusString='RateGold'
+		IF @GoldRate=0 OR @GoldRate IS NULL
+			SET @GoldRate=1
+
+		SET @GrantScore = @Currency*@Rate*@GoldRate
+		SET @Note = N'充值'+LTRIM(STR(@Currency))+'元'
+		INSERT INTO RecordSpreadInfo(
+			UserID,Score,TypeID,ChildrenID,CollectNote)
+		VALUES(@SpreaderID,@GrantScore,3,@UserID,@Note)		
+	END
+
+	--------------------------------------------------------------------------------
+
+	-- 设置卡已使用
+	UPDATE LivcardAssociator SET ApplyDate=GETDATE() WHERE CardID=@CardID
+
+	-- 记录日志
+	DECLARE @DateID INT
+	SET @DateID=CAST(CAST(GETDATE() AS FLOAT) AS INT)	
+	
+	UPDATE StreamShareInfo
+	SET ShareTotals=ShareTotals+1
+	WHERE DateID=@DateID AND ShareID=@ShareID
+
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT StreamShareInfo(DateID,ShareID,ShareTotals)
+		VALUES (@DateID,@ShareID,1)
+	END	 
+
+	SET @strErrorDescribe=N'实卡充值成功。'
+	SELECT Score as UserScore FROM THTreasureDB.dbo.GameScoreInfo WHERE UserID=@dwOperUserID
+	RETURN 0
+END 
+
+
+GO

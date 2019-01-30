@@ -1,0 +1,838 @@
+﻿CREATE TABLE [dbo].[RecordUserCountInfo] (
+    [ID]            INT      IDENTITY (1, 1) NOT NULL,
+    [UserID]        INT      NOT NULL,
+    [RechargeSum]   INT      CONSTRAINT [DF_RecordUserCountInfo_RechargeSum] DEFAULT ((0)) NOT NULL,					充值总数
+    [RechargeCount] INT      CONSTRAINT [DF_RecordUserCountInfo_RechargeCount] DEFAULT ((0)) NOT NULL,					充值数
+    [GameSum]       BIGINT   CONSTRAINT [DF_RecordUserCountInfo_GameSum] DEFAULT ((0)) NOT NULL,						游戏总所得
+    [ZzSum]         BIGINT   CONSTRAINT [DF_RecordUserCountInfo_ZzSum] DEFAULT ((0)) NOT NULL,							转账总得
+    [ZzCount]       INT      CONSTRAINT [DF_RecordUserCountInfo_ZzCount] DEFAULT ((0)) NOT NULL,						转账次数
+    [ZcPtSum]       BIGINT   CONSTRAINT [DF_RecordUserCountInfo_ZcPtSum] DEFAULT ((0)) NOT NULL,						转出到普通总数
+    [ZcPtCount]     INT      CONSTRAINT [DF_RecordUserCountInfo_ZcPtCount] DEFAULT ((0)) NOT NULL,						转出到普通次数
+    [ZcVipSum]      BIGINT   CONSTRAINT [DF_RecordUserCountInfo_ZcVipSum] DEFAULT ((0)) NOT NULL,						转出到vip总数
+    [ZcVipCount]    INT      CONSTRAINT [DF_RecordUserCountInfo_ZcVipCount] DEFAULT ((0)) NOT NULL,						转出到vip次数
+    [ZrPtSum]       BIGINT   CONSTRAINT [DF_RecordUserCountInfo_ZrPtSum] DEFAULT ((0)) NOT NULL,						普通转入总数
+    [ZrPtCount]     INT      CONSTRAINT [DF_RecordUserCountInfo_ZrPtCount] DEFAULT ((0)) NOT NULL,						普通转入总次数
+    [ZrVipSum]      BIGINT   CONSTRAINT [DF_RecordUserCountInfo_ZrVipSum] DEFAULT ((0)) NOT NULL,						vip转入总数
+    [ZrVipCount]    INT      CONSTRAINT [DF_RecordUserCountInfo_ZrVipCount] DEFAULT ((0)) NOT NULL,						vip转入次数
+    [InsertDate]    DATETIME CONSTRAINT [DF_RecordUserCountInfo_InsertDate] DEFAULT (getdate()) NOT NULL,				插入时间
+);UserID,充值,输赢,转账普通,转账VIP
+
+CREATE TABLE [dbo].[RecordUserDayCount] (
+    [ID]            INT      IDENTITY (1, 1) NOT NULL,
+    [UserID]        INT      NOT NULL,
+    [RechargeSum]   INT      CONSTRAINT [DF_RecordUserDayCount_RechargeSum] DEFAULT ((0)) NOT NULL,						充值总数
+    [RechargeCount] INT      CONSTRAINT [DF_RecordUserDayCount_RechargeCount] DEFAULT ((0)) NOT NULL,					充值数
+    [GameSum]       BIGINT   CONSTRAINT [DF_RecordUserDayCount_GameSum] DEFAULT ((0)) NOT NULL,							游戏总所得
+    [ZzSum]         BIGINT   CONSTRAINT [DF_RecordUserDayCount_ZzSum] DEFAULT ((0)) NOT NULL,							转账总得
+    [ZzCount]       INT      CONSTRAINT [DF_RecordUserDayCount_ZzCount] DEFAULT ((0)) NOT NULL,							转账次数
+    [ZcPtSum]       BIGINT   CONSTRAINT [DF_RecordUserDayCount_ZcPtSum] DEFAULT ((0)) NOT NULL,							转出到普通总数
+    [ZcPtCount]     INT      CONSTRAINT [DF_RecordUserDayCount_ZcPtCount] DEFAULT ((0)) NOT NULL,						转出到普通次数
+    [ZcVipSum]      BIGINT   CONSTRAINT [DF_RecordUserDayCount_ZcVipSum] DEFAULT ((0)) NOT NULL,						转出到vip总数
+    [ZcVipCount]    INT      CONSTRAINT [DF_RecordUserDayCount_ZcVipCount] DEFAULT ((0)) NOT NULL,						转出到vip次数
+    [ZrPtSum]       BIGINT   CONSTRAINT [DF_RecordUserDayCount_ZrPtSum] DEFAULT ((0)) NOT NULL,							普通转入总数
+    [ZrPtCount]     INT      CONSTRAINT [DF_RecordUserDayCount_ZrPtCount] DEFAULT ((0)) NOT NULL,						普通转入总次数
+    [ZrVipSum]      BIGINT   CONSTRAINT [DF_RecordUserDayCount_ZrVipSum] DEFAULT ((0)) NOT NULL,						vip转入总数
+    [ZrVipCount]    INT      CONSTRAINT [DF_RecordUserDayCount_ZrVipCount] DEFAULT ((0)) NOT NULL,						vip转入次数
+    [InsertDate]    DATETIME CONSTRAINT [DF_RecordUserDayCount_InsertDate] DEFAULT (getdate()) NOT NULL,				插入时间
+);UserID,充值,输赢,转账普通,转账VIP
+
+CREATE TABLE [dbo].[RecordChannelDayCount] (
+    [RecordID]       INT      IDENTITY (1, 1) NOT NULL,																	日志标识
+    [ChannelID]      INT      NOT NULL,																					渠道标识
+    [Open]           INT      CONSTRAINT [DF_RecordChannelDayCount_Open] DEFAULT ((0)) NOT NULL,						激活数
+    [Reg]            INT      CONSTRAINT [DF_RecordChannelDayCount_Reg] DEFAULT ((0)) NOT NULL,							注册数
+    [Mac_Reg]        INT      CONSTRAINT [DF_RecordChannelDayCount_Mac_Reg] DEFAULT ((0)) NOT NULL,						排重注册
+    [New_Reg]        INT      CONSTRAINT [DF_RecordChannelDayCount_New_Reg] DEFAULT ((0)) NOT NULL,						新增注册
+    [Recharge_count] INT      CONSTRAINT [DF_RecordChannelDayCount_Recharge_count] DEFAULT ((0)) NOT NULL,				充值人数
+    [Recharge_sum]   INT      CONSTRAINT [DF_RecordChannelDayCount_Recharge] DEFAULT ((0)) NOT NULL,					充值总数
+    [Scale]          INT      CONSTRAINT [DF_RecordChannelDayCount_Scale] DEFAULT ((0)) NOT NULL,						分成比例 千分之
+    [Out_scale]      INT      CONSTRAINT [DF_RecordChannelDayCount_Out_scale] DEFAULT ((0)) NOT NULL,					输出比例 千分之
+    [Insure_user]    INT      CONSTRAINT [DF_RecordChannelDayCount_Insure_user] DEFAULT ((0)) NOT NULL,					转账人数
+    [Insure_sum]     BIGINT   CONSTRAINT [DF_RecordChannelDayCount_Insure_sum] DEFAULT ((0)) NOT NULL,					转账数
+    [Liucun_1]       INT      CONSTRAINT [DF_RecordChannelDayCount_Liucun_1] DEFAULT ((0)) NOT NULL,					次日留存
+    [Liucun_7]       INT      CONSTRAINT [DF_RecordChannelDayCount_Liucun_7] DEFAULT ((0)) NOT NULL,					7日留存
+    [Active]         INT      CONSTRAINT [DF_RecordChannelDayCount_huoyue] DEFAULT ((0)) NOT NULL,						活跃数
+    [InsertDate]     DATETIME CONSTRAINT [DF_RecordChannelDayCount_InsertDate] DEFAULT (getdate()) NOT NULL,			插入时间
+);ChannelID,激活,注册,充值,转账,活跃
+
+
+CREATE TABLE [dbo].[RecordChannelList] (
+    [RecordID]   INT           IDENTITY (1, 1) NOT NULL,
+    [ChannelID]  INT           NOT NULL,
+    [Account]    NVARCHAR (50) NOT NULL,
+    [C_Type]     INT           NOT NULL,
+    [Name]       NVARCHAR (50) NOT NULL,
+    [C_Name]     NVARCHAR (50) NOT NULL,
+    [H_Type]     INT           NOT NULL,
+    [Scale]      INT           NOT NULL,
+    [OutScale]   INT           NOT NULL,
+    [InsertDate] DATETIME      NOT NULL,
+);
+
+
+
+
+
+
+
+
+UserID,充值,输赢,转账普通,转账VIP
+ChannelID,激活,注册,充值,转账,活跃
+
+
+
+
+
+
+
+
+
+
+DECLARE @UserIDFrom INT
+DECLARE @UserIDTo INT
+SET @UserIDFrom=19199
+SET @UserIDTo=19200
+DELETE FROM THRecordDB.dbo.[RecordChannelDayCount] WHERE InsertDate=GETDATE() AND ChannelID IN (SELECT SpreaderID FROM THAccountsDB.dbo.AccountsInfo WHERE UserID IN(@UserIDFrom,@UserIDTo))
+DELETE FROM THRecordDB.dbo.RecordMachineCountInfo WHERE RegisterMachine IN (SELECT RegisterMachine FROM THAccountsDB.dbo.AccountsInfo WHERE UserID IN(@UserIDFrom,@UserIDTo))
+DELETE FROM THRecordDB.dbo.RecordUserDayCount WHERE InsertDate=GETDATE() AND UserID IN (SELECT UserID FROM THAccountsDB.dbo.AccountsInfo WHERE UserID IN(@UserIDFrom,@UserIDTo))
+DELETE FROM THRecordDB.dbo.RecordUserCountInfo WHERE UserID IN (SELECT UserID FROM THAccountsDB.dbo.AccountsInfo WHERE UserID IN(@UserIDFrom,@UserIDTo))
+EXEC THRecordDB.dbo.GSP_GR_DJ_PuTong2PuTong @UserIDFrom,@UserIDTo,1,1
+
+SELECT TOP 1000 RecordID [RecordChannelDayCount],ChannelID '渠道日统计',(CASE WHEN TypeID=1 THEN '安卓' ELSE '苹果' END) 平台, Insure_user '转账人数', Insure_sum '转账数'
+--	, *
+ FROM THRecordDB.dbo.[RecordChannelDayCount] WHERE InsertDate=GETDATE() AND ChannelID IN (SELECT SpreaderID FROM THAccountsDB.dbo.AccountsInfo WHERE UserID IN(@UserIDFrom,@UserIDTo))
+
+SELECT TOP 1000 ID RecordMachineCountInfo,RegisterMachine '机器总统计',ZzSum '转账总得', ZzCount '转账次数', ZcPtSum '转出到普通总数', ZcPtCount '转出到普通次数', ZcVipSum '转出到vip总数', ZcVipCount '转出到vip次数', ZrPtSum '普通转入总数', ZrPtCount '普通转入总次数', ZrVipSum 'vip转入总数', ZrVipCount 'vip转入次数'
+--	, *
+ FROM THRecordDB.dbo.RecordMachineCountInfo WHERE RegisterMachine IN (SELECT RegisterMachine FROM THAccountsDB.dbo.AccountsInfo WHERE UserID IN(@UserIDFrom,@UserIDTo))
+
+SELECT TOP 1000 ID RecordUserDayCount,UserID '用户日统计', ZzSum '转账总得', ZzCount '转账次数', ZcPtSum '转出到普通总数', ZcPtCount '转出到普通次数', ZcVipSum '转出到vip总数', ZcVipCount '转出到vip次数', ZrPtSum '普通转入总数', ZrPtCount '普通转入总次数', ZrVipSum 'vip转入总数', ZrVipCount 'vip转入次数'
+--	, *
+ FROM THRecordDB.dbo.RecordUserDayCount WHERE InsertDate=GETDATE() AND UserID IN (SELECT UserID FROM THAccountsDB.dbo.AccountsInfo WHERE UserID IN(@UserIDFrom,@UserIDTo))
+
+SELECT TOP 1000 ID RecordUserCountInfo,UserID '用户总统计',ZzSum '转账总得', ZzCount '转账次数', ZcPtSum '转出到普通总数', ZcPtCount '转出到普通次数', ZcVipSum '转出到vip总数', ZcVipCount '转出到vip次数', ZrPtSum '普通转入总数', ZrPtCount '普通转入总次数', ZrVipSum 'vip转入总数', ZrVipCount 'vip转入次数'
+--	, *
+ FROM THRecordDB.dbo.RecordUserCountInfo WHERE UserID IN (SELECT UserID FROM THAccountsDB.dbo.AccountsInfo WHERE UserID IN(@UserIDFrom,@UserIDTo))
+
+
+
+
+----------------------------------------------------------------------------------------------------
+
+USE THRecordDB
+GO
+
+IF EXISTS (SELECT * FROM DBO.SYSOBJECTS WHERE ID = OBJECT_ID(N'[dbo].[GSP_GR_DJ_Recharge]') and OBJECTPROPERTY(ID, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[GSP_GR_DJ_Recharge]
+GO
+IF EXISTS (SELECT * FROM DBO.SYSOBJECTS WHERE ID = OBJECT_ID(N'[dbo].[GSP_GR_DJ_Win]') and OBJECTPROPERTY(ID, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[GSP_GR_DJ_Win]
+GO
+IF EXISTS (SELECT * FROM DBO.SYSOBJECTS WHERE ID = OBJECT_ID(N'[dbo].[GSP_GR_DJ_PuTong2PuTong]') and OBJECTPROPERTY(ID, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[GSP_GR_DJ_PuTong2PuTong]
+GO
+IF EXISTS (SELECT * FROM DBO.SYSOBJECTS WHERE ID = OBJECT_ID(N'[dbo].[GSP_GR_DJ_PuTong2Vip]') and OBJECTPROPERTY(ID, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[GSP_GR_DJ_PuTong2Vip]
+GO
+IF EXISTS (SELECT * FROM DBO.SYSOBJECTS WHERE ID = OBJECT_ID(N'[dbo].[GSP_GR_DJ_Vip2PuTong]') and OBJECTPROPERTY(ID, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[GSP_GR_DJ_Vip2PuTong]
+GO
+IF EXISTS (SELECT * FROM DBO.SYSOBJECTS WHERE ID = OBJECT_ID(N'[dbo].[GSP_GR_DJ_Vip2Vip]') and OBJECTPROPERTY(ID, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[GSP_GR_DJ_Vip2Vip]
+GO
+IF EXISTS (SELECT * FROM DBO.SYSOBJECTS WHERE ID = OBJECT_ID(N'[dbo].[GSP_GR_DJ_JiHuo]') and OBJECTPROPERTY(ID, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[GSP_GR_DJ_JiHuo]
+GO
+IF EXISTS (SELECT * FROM DBO.SYSOBJECTS WHERE ID = OBJECT_ID(N'[dbo].[GSP_GR_DJ_Reg]') and OBJECTPROPERTY(ID, N'IsProcedure') = 1)
+DROP PROCEDURE [dbo].[GSP_GR_DJ_Reg]
+GO
+
+SET QUOTED_IDENTIFIER ON 
+GO
+
+SET ANSI_NULLS ON 
+GO
+
+----------------------------------------------------------------------------------------------------
+
+-- 游戏充值
+CREATE PROC GSP_GR_DJ_Recharge
+
+	-- 用户信息
+	@dwUserID INT,								-- 用户 I D
+	@dwMoney INT								-- 充值金额
+
+WITH ENCRYPTION AS
+
+-- 属性设置
+SET NOCOUNT ON
+
+-- 执行逻辑
+BEGIN
+	DECLARE @PlatformID INT
+	DECLARE @IosAndroid INT
+	SET @PlatformID = 0;
+	SET @IosAndroid = 1;
+	SELECT TOP 1 @PlatformID=PlatformID FROM [THAccountsDB].[dbo].[AccountsInfo] WHERE UserID=@dwUserID ORDER BY UserID DESC
+	IF @PlatformID=1002
+	BEGIN
+		SET @IosAndroid = 2;
+	END
+
+	DECLARE @TodayDate DATE
+	SET @TodayDate = CAST(GETDATE() AS DATE)
+	DECLARE @ChannelID INT
+	DECLARE	@RegisterMachine NVARCHAR(32)
+	SET @ChannelID = 0
+	SET @RegisterMachine = NULL
+	SELECT @ChannelID=ChannelID FROM THAccountsDBLink.THAccountsDB.dbo.AccountsChannel WHERE UserID=@dwUserID;
+	SELECT @RegisterMachine=RegisterMachine FROM THAccountsDBLink.THAccountsDB.dbo.AccountsInfo WHERE UserID=@dwUserID;
+
+	UPDATE RecordUserCountInfo SET RechargeSum=RechargeSum+@dwMoney,RechargeCount=RechargeCount+1 WHERE UserID=@dwUserID;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordUserCountInfo(UserID, RechargeSum, RechargeCount) VALUES(@dwUserID, @dwMoney, 1);
+	END
+
+	UPDATE RecordUserDayCount SET RechargeSum=RechargeSum+@dwMoney,RechargeCount=RechargeCount+1 WHERE UserID=@dwUserID AND InsertDate=@TodayDate;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordUserDayCount(UserID, RechargeSum, RechargeCount) VALUES(@dwUserID, @dwMoney, 1);
+	END
+
+	UPDATE RecordChannelDayCount SET Recharge_sum=Recharge_sum+@dwMoney WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, Recharge_sum, InsertDate, TypeID) VALUES(@ChannelID, @dwMoney, @TodayDate, @IosAndroid);
+	END
+
+	UPDATE RecordMachineCountInfo SET RechargeSum=RechargeSum+@dwMoney,RechargeCount=RechargeCount+1 WHERE RegisterMachine=@RegisterMachine;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordMachineCountInfo(RegisterMachine, RechargeSum, RechargeCount) VALUES(@RegisterMachine, @dwMoney, 1);
+	END
+
+	UPDATE RecordMachineDayCount SET RechargeSum=RechargeSum+@dwMoney,RechargeCount=RechargeCount+1 WHERE RegisterMachine=@RegisterMachine AND InsertDate=@TodayDate;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordMachineDayCount(RegisterMachine, RechargeSum, RechargeCount) VALUES(@RegisterMachine, @dwMoney, 1);
+	END
+END
+
+RETURN 0
+
+GO
+
+----------------------------------------------------------------------------------------------------
+
+-- 游戏输赢
+CREATE PROC GSP_GR_DJ_Win
+
+	-- 用户信息
+	@dwUserID INT,								-- 用户 I D
+	@dwMoney BIGINT								-- 输赢金额
+
+WITH ENCRYPTION AS
+
+-- 属性设置
+SET NOCOUNT ON
+
+-- 执行逻辑
+BEGIN
+	DECLARE @ChannelID INT
+	DECLARE @PlatformID INT
+	DECLARE @IosAndroid INT
+	DECLARE	@RegisterMachine NVARCHAR(32)
+	SET @ChannelID = 0;
+	SET @PlatformID = 0;
+	SET @IosAndroid = 1;
+	SELECT TOP 1 @PlatformID=PlatformID,@ChannelID=SpreaderID,@RegisterMachine=RegisterMachine, @IosAndroid=(CASE WHEN(PlatformID=1002) THEN 2 ELSE 1 END)  FROM [THAccountsDB].[dbo].[AccountsInfo] WHERE UserID=@dwUserID
+
+	DECLARE @TodayDate DATE
+	SET @TodayDate = CAST(GETDATE() AS DATE)
+
+	UPDATE RecordUserCountInfo SET GameSum=GameSum+@dwMoney,GameSumDay=GameSumDay+@dwMoney WHERE UserID=@dwUserID;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordUserCountInfo(UserID, GameSum, InsertDate) VALUES(@dwUserID, @dwMoney, @TodayDate);
+	END
+
+	UPDATE RecordUserDayCount SET GameSum=GameSum+@dwMoney WHERE UserID=@dwUserID AND InsertDate=@TodayDate;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordUserDayCount(UserID, GameSum, InsertDate) VALUES(@dwUserID, @dwMoney, @TodayDate);
+	END
+
+	UPDATE RecordChannelDayCount SET Recharge_sum=Recharge_sum+@dwMoney WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, Recharge_sum, InsertDate, TypeID) VALUES(@ChannelID, @dwMoney, @TodayDate, @IosAndroid);
+	END
+
+	UPDATE RecordMachineCountInfo SET GameSum=GameSum+@dwMoney WHERE RegisterMachine=@RegisterMachine AND ChannelID=@ChannelID;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordMachineCountInfo(RegisterMachine, GameSum, InsertDate, ChannelID) VALUES(@RegisterMachine, @dwMoney, @TodayDate, @ChannelID);
+	END
+
+	UPDATE RecordMachineDayCount SET GameSum=GameSum+@dwMoney WHERE RegisterMachine=@RegisterMachine AND ChannelID=@ChannelID AND InsertDate=@TodayDate;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordMachineDayCount(RegisterMachine, GameSum, InsertDate, ChannelID) VALUES(@RegisterMachine, @dwMoney, @TodayDate, @ChannelID);
+	END
+END
+
+RETURN 0
+
+GO
+
+
+----------------------------------------------------------------------------------------------------
+
+-- 游戏转帐
+CREATE PROC GSP_GR_DJ_PuTong2PuTong
+
+	-- 用户信息
+	@dwUserIDFrom INT,								-- 用户 I D
+	@dwUserIDTo INT,								-- 用户 I D
+	@dwMoneyFrom BIGINT,							-- 充值金额
+	@dwMoneyTo BIGINT								-- 充值金额
+
+WITH ENCRYPTION AS
+
+-- 属性设置
+SET NOCOUNT ON
+
+-- 执行逻辑
+BEGIN
+	DECLARE @TodayDateTime DATETIME
+	SET @TodayDateTime = GETDATE()
+	DECLARE @TodayDate DATE
+	SET @TodayDate = CAST(@TodayDateTime AS DATE)
+
+	DECLARE @ChannelIDFrom INT
+	DECLARE @PlatformIDFrom INT
+	DECLARE @IosAndroidFrom INT
+	DECLARE	@RegisterMachineFrom NVARCHAR(32)
+	DECLARE @ChannelIDTo INT
+	DECLARE @PlatformIDTo INT
+	DECLARE @IosAndroidTo INT
+	DECLARE	@RegisterMachineTo NVARCHAR(32)
+	DECLARE @MemberOrderFrom INT -- 1蓝钻2黄3白4红5VIP
+	DECLARE @MemberOrderTo INT -- 1蓝钻2黄3白4红5VIP
+	declare @memIdentFrom int -- 1VIP1能转给VIP2，3，vip2=vip3
+	declare @memIdentTo int
+	SET @ChannelIDFrom = 0;
+	SET @PlatformIDFrom = 0;
+	SET @IosAndroidFrom = 1;
+	SET @ChannelIDTo = 0;
+	SET @PlatformIDTo = 0;
+	SET @IosAndroidTo = 1;
+	-- SELECT TOP 1 @PlatformIDFrom=PlatformID,@ChannelIDFrom=SpreaderID,@RegisterMachineFrom=RegisterMachine, @IosAndroidFrom=(CASE WHEN(PlatformID=1002) THEN 2 ELSE 1 END), @MemberOrderFrom=MemberOrder FROM [THAccountsDB].[dbo].[AccountsInfo] WHERE UserID=@dwUserIDFrom
+	-- SELECT TOP 1 @PlatformIDTo=PlatformID,@ChannelIDTo=SpreaderID,@RegisterMachineTo=RegisterMachine, @IosAndroidTo=(CASE WHEN(PlatformID=1002) THEN 2 ELSE 1 END), @MemberOrderTo=MemberOrder FROM [THAccountsDB].[dbo].[AccountsInfo] WHERE UserID=@dwUserIDTo
+	SELECT TOP 1 @memIdentFrom=memIdent,@PlatformIDFrom=PlatformID,@ChannelIDFrom=SpreaderID,@RegisterMachineFrom=RegisterMachine, @MemberOrderFrom=MemberOrder FROM [THAccountsDB].[dbo].[AccountsInfo] WHERE UserID=@dwUserIDFrom
+	SELECT TOP 1 @memIdentTo=memIdent,@PlatformIDTo=PlatformID,@ChannelIDTo=SpreaderID,@RegisterMachineTo=RegisterMachine, @MemberOrderTo=MemberOrder FROM [THAccountsDB].[dbo].[AccountsInfo] WHERE UserID=@dwUserIDTo
+
+	if LEFT(@PlatformIDFrom,1) = 1   -- 以1开头为苹果
+	Begin
+	    SET @IosAndroidFrom=2  
+	End
+	Else if LEFT(@PlatformIDFrom,1) = 2  -- 以2开头为安卓
+	Begin
+	   SET @IosAndroidFrom=1 
+	End
+	else 
+	Begin
+	   SET @IosAndroidFrom=3             -- 以3开头为PC
+	End
+
+	if LEFT(@PlatformIDTo,1) = 1   -- 以1开头为苹果
+	Begin
+	    SET @IosAndroidTo=2  
+	End
+	Else if LEFT(@PlatformIDTo,1) = 2
+	Begin
+	   SET @IosAndroidTo=1 
+	End
+	else 
+	Begin
+	   SET @IosAndroidTo=3
+	End
+
+	declare @zzrFrom int
+	declare @zzrTo int
+	
+	-- 记录vip转到普通
+	declare @days date set @days = CONVERT(varchar,GETDATE(),23)
+	declare @id int
+	declare @idTo int
+	select @id=[ID] from [THRecordDB].[dbo].[RecordVipzcPt](nolock) where [UserID] = @dwUserIDFrom and [Days] = @days
+	select @idTo=[ID] from [THRecordDB].[dbo].[RecordVipzcPt](nolock) where [UserID] = @dwUserIDTo and [Days] = @days
+	if @id is null and @MemberOrderFrom > 0 and @memIdentFrom > 2
+	begin
+		insert into [THRecordDB].[dbo].[RecordVipzcPt]([UserID],[Amout],[Days],vip1zr,zcvip1,remainder) values(@dwUserIDFrom,0,@days,0,0,0)
+	end
+	
+	if @idTo is null and @MemberOrderTo > 0 and @memIdentTo > 2
+	begin
+		insert into [THRecordDB].[dbo].[RecordVipzcPt]([UserID],[Amout],[Days],vip1zr,zcvip1,remainder) values(@dwUserIDTo,0,@days,0,0,0)
+	end
+	 
+	IF (SELECT COUNT(*) FROM RecordChannelDayCount WHERE ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate AND TypeID=1)=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, InsertDate, TypeID) VALUES(@ChannelIDFrom, @TodayDate, 1);
+	END
+	IF (SELECT COUNT(*) FROM RecordChannelDayCount WHERE ChannelID=@ChannelIDTo AND InsertDate=@TodayDate AND TypeID=1)=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, InsertDate, TypeID) VALUES(@ChannelIDTo, @TodayDate, 1);
+	END
+	IF (SELECT COUNT(*) FROM RecordChannelDayCount WHERE ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate AND TypeID=2)=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, InsertDate, TypeID) VALUES(@ChannelIDFrom, @TodayDate, 2);
+	END
+	IF (SELECT COUNT(*) FROM RecordChannelDayCount WHERE ChannelID=@ChannelIDTo AND InsertDate=@TodayDate AND TypeID=2)=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, InsertDate, TypeID) VALUES(@ChannelIDTo, @TodayDate, 2);
+	END
+	IF (SELECT COUNT(*) FROM RecordChannelDayCount WHERE ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate AND TypeID=3)=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, InsertDate, TypeID) VALUES(@ChannelIDFrom, @TodayDate, 3);
+	END
+	IF (SELECT COUNT(*) FROM RecordChannelDayCount WHERE ChannelID=@ChannelIDTo AND InsertDate=@TodayDate AND TypeID=3)=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, InsertDate, TypeID) VALUES(@ChannelIDTo, @TodayDate, 3);
+	END
+	IF (SELECT COUNT(*) FROM RecordUserCountInfo WHERE UserID=@dwUserIDFrom)=0
+	BEGIN
+		INSERT INTO RecordUserCountInfo(UserID, InsertDate) VALUES(@dwUserIDFrom, @TodayDate);
+	END
+	IF (SELECT COUNT(*) FROM RecordUserCountInfo WHERE UserID=@dwUserIDTo)=0
+	BEGIN
+		INSERT INTO RecordUserCountInfo(UserID, InsertDate) VALUES(@dwUserIDTo, @TodayDate);
+	END
+	IF (SELECT COUNT(*) FROM RecordUserDayCount WHERE UserID=@dwUserIDFrom AND InsertDate=@TodayDate)=0
+	BEGIN
+		INSERT INTO RecordUserDayCount(UserID, InsertDate) VALUES(@dwUserIDFrom, @TodayDate);
+	END
+	IF (SELECT COUNT(*) FROM RecordUserDayCount WHERE UserID=@dwUserIDTo AND InsertDate=@TodayDate)=0
+	BEGIN
+		INSERT INTO RecordUserDayCount(UserID, InsertDate) VALUES(@dwUserIDTo, @TodayDate);
+		UPDATE RecordChannelDayCount SET Insure_user=Insure_user+1 WHERE ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate AND TypeID=@IosAndroidFrom;
+	END
+	IF (SELECT COUNT(*) FROM RecordMachineCountInfo WHERE RegisterMachine=@RegisterMachineFrom AND ChannelID=@ChannelIDFrom)=0
+	BEGIN
+		INSERT INTO RecordMachineCountInfo(RegisterMachine, InsertDate, ChannelID) VALUES(@RegisterMachineFrom, @TodayDate, @ChannelIDFrom);
+	END
+	IF (SELECT COUNT(*) FROM RecordMachineCountInfo WHERE RegisterMachine=@RegisterMachineTo AND ChannelID=@ChannelIDTo)=0
+	BEGIN
+		INSERT INTO RecordMachineCountInfo(RegisterMachine, InsertDate, ChannelID) VALUES(@RegisterMachineTo, @TodayDate, @ChannelIDTo);
+	END
+	IF (SELECT COUNT(*) FROM RecordMachineDayCount WHERE RegisterMachine=@RegisterMachineFrom AND ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate)=0
+	BEGIN
+		INSERT INTO RecordMachineDayCount(RegisterMachine, InsertDate, ChannelID) VALUES(@RegisterMachineFrom, @TodayDate, @ChannelIDFrom);
+	END
+	IF (SELECT COUNT(*) FROM RecordMachineDayCount WHERE RegisterMachine=@RegisterMachineTo AND ChannelID=@ChannelIDTo AND InsertDate=@TodayDate)=0
+	BEGIN
+		INSERT INTO RecordMachineDayCount(RegisterMachine, InsertDate, ChannelID) VALUES(@RegisterMachineTo, @TodayDate, @ChannelIDTo);
+	END
+
+	update [THRecordDB].[dbo].[RecordVipzcPt] set [Amout] = [Amout] + @dwMoneyTo where [UserID] = @dwUserIDFrom and [Days] = @days and @MemberOrderFrom > 0 and @MemberOrderTo = 0 and @memIdentFrom > 2
+	declare @SourceScore bigint
+	declare @SourceInsure bigint
+	declare @SourceScoreTo bigint
+	declare @SourceInsureTo bigint
+	SELECT @SourceScoreTo=Score, @SourceInsureTo=InsureScore FROM [THTreasureDB].[dbo].[GameScoreInfo] WHERE UserID=@dwUserIDTo
+	update [THRecordDB].[dbo].[RecordVipzcPt] set remainder = @SourceScoreTo+@SourceInsureTo where [UserID] = @dwUserIDTo and [Days] = @days and @MemberOrderTo > 0
+	SELECT @SourceScore=Score, @SourceInsure=InsureScore FROM [THTreasureDB].[dbo].[GameScoreInfo] WHERE UserID=@dwUserIDFrom
+	update [THRecordDB].[dbo].[RecordVipzcPt] set remainder = @SourceScore+@SourceInsure where [UserID] = @dwUserIDFrom and [Days] = @days and @MemberOrderFrom > 0
+	if @MemberOrderFrom > 0 and  @MemberOrderTo > 0 
+	begin
+		if @memIdentFrom <= 2 and @memIdentTo > 2
+		begin
+			update [THRecordDB].[dbo].[RecordVipzcPt] set vip1zr = vip1zr + @dwMoneyTo where [UserID] = @dwUserIDTo and [Days] = @days 
+		end
+		
+		if @memIdentFrom > 2 and @memIdentTo <=2
+		begin
+			update [THRecordDB].[dbo].[RecordVipzcPt] set zcvip1 = zcvip1 + @dwMoneyTo where [UserID] = @dwUserIDFrom and [Days] = @days 
+		end
+	end
+
+	UPDATE RecordChannelList SET VIP_zc_sum=VIP_zc_sum+@dwMoneyFrom WHERE ChannelID=@ChannelIDFrom and @MemberOrderFrom>=5;
+	UPDATE RecordChannelList SET VIP_zr_sum=VIP_zr_sum+@dwMoneyTo WHERE ChannelID=@ChannelIDTo and @MemberOrderFrom>=5;
+	UPDATE RecordChannelDayCount SET Insure_sum=Insure_sum-@dwMoneyFrom WHERE ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate AND TypeID=@IosAndroidFrom;
+	UPDATE RecordChannelDayCount SET Insure_sum=Insure_sum+@dwMoneyTo WHERE ChannelID=@ChannelIDTo AND InsertDate=@TodayDate AND TypeID=@IosAndroidTo;
+	UPDATE RecordUserCountInfo SET ZzSum=ZzSum-@dwMoneyFrom,ZzCount=ZzCount+1 WHERE UserID=@dwUserIDFrom;
+	UPDATE RecordUserCountInfo SET ZzSum=ZzSum+@dwMoneyTo WHERE UserID=@dwUserIDTo;
+	UPDATE RecordUserDayCount SET ZzSum=ZzSum-@dwMoneyFrom,ZzCount=ZzCount+1 WHERE UserID=@dwUserIDFrom AND InsertDate=@TodayDate;
+	UPDATE RecordUserDayCount SET ZzSum=ZzSum+@dwMoneyTo WHERE UserID=@dwUserIDTo AND InsertDate=@TodayDate;
+	UPDATE RecordMachineCountInfo SET ZzSum=ZzSum-@dwMoneyFrom,ZzCount=ZzCount+1 WHERE RegisterMachine=@RegisterMachineFrom AND ChannelID=@ChannelIDFrom;
+	UPDATE RecordMachineCountInfo SET ZzSum=ZzSum+@dwMoneyTo WHERE RegisterMachine=@RegisterMachineTo AND ChannelID=@ChannelIDTo;
+	UPDATE RecordMachineDayCount SET ZzSum=ZzSum-@dwMoneyFrom,ZzCount=ZzCount+1 WHERE RegisterMachine=@RegisterMachineFrom AND InsertDate=@TodayDate AND ChannelID=@ChannelIDFrom;
+	UPDATE RecordMachineDayCount SET ZzSum=ZzSum+@dwMoneyTo WHERE RegisterMachine=@RegisterMachineTo AND InsertDate=@TodayDate AND ChannelID=@ChannelIDTo;
+
+	-- UPDATE RecordChannelDayCount SET VIP_zc=VIP_zc+@dwMoneyFrom WHERE ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate AND TypeID=@IosAndroidFrom AND @MemberOrderFrom>=5;
+	-- UPDATE RecordChannelDayCount SET VIP_zr=VIP_zr+@dwMoneyTo WHERE ChannelID=@ChannelIDTo AND InsertDate=@TodayDate AND TypeID=@IosAndroidTo AND @MemberOrderTo>=5;
+	UPDATE RecordChannelDayCount SET VIP_zc=VIP_zc+@dwMoneyFrom WHERE ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate AND TypeID=@IosAndroidFrom AND @MemberOrderFrom>=5;
+	UPDATE RecordChannelDayCount SET VIP_zr=VIP_zr+@dwMoneyTo WHERE ChannelID=@ChannelIDTo AND InsertDate=@TodayDate AND TypeID=@IosAndroidTo AND @MemberOrderFrom>=5;
+
+	UPDATE RecordUserCountInfo SET ZcPtSum=ZcPtSum+@dwMoneyFrom,ZcPtCount=ZcPtCount+1 WHERE UserID=@dwUserIDFrom AND @MemberOrderTo<5;
+	UPDATE RecordUserCountInfo SET ZcVipSum=ZcVipSum+@dwMoneyFrom,ZcVipCount=ZcVipCount+1 WHERE UserID=@dwUserIDFrom AND @MemberOrderTo>=5;
+	UPDATE RecordUserCountInfo SET ZrPtSum=ZrPtSum+@dwMoneyFrom,ZrPtCount=ZrPtCount+1 WHERE UserID=@dwUserIDTo AND @MemberOrderFrom<5;
+	UPDATE RecordUserCountInfo SET ZrVipSum=ZrVipSum+@dwMoneyFrom,ZrVipCount=ZrVipCount+1 WHERE UserID=@dwUserIDTo AND @MemberOrderFrom>=5;
+
+	UPDATE RecordUserDayCount SET ZcPtSum=ZcPtSum+@dwMoneyFrom,ZcPtCount=ZcPtCount+1 WHERE UserID=@dwUserIDFrom AND InsertDate=@TodayDate AND @MemberOrderTo<5;
+	UPDATE RecordUserDayCount SET ZcVipSum=ZcVipSum+@dwMoneyFrom,ZcVipCount=ZcVipCount+1 WHERE UserID=@dwUserIDFrom AND InsertDate=@TodayDate AND @MemberOrderTo>=5;
+	UPDATE RecordUserDayCount SET ZrPtSum=ZrPtSum+@dwMoneyFrom,ZrPtCount=ZrPtCount+1 WHERE UserID=@dwUserIDTo AND InsertDate=@TodayDate AND @MemberOrderFrom<5;
+	UPDATE RecordUserDayCount SET ZrVipSum=ZrVipSum+@dwMoneyFrom,ZrVipCount=ZrVipCount+1 WHERE UserID=@dwUserIDTo AND InsertDate=@TodayDate AND @MemberOrderFrom>=5;
+
+	UPDATE RecordMachineCountInfo SET ZcPtSum=ZcPtSum+@dwMoneyFrom,ZcPtCount=ZcPtCount+1 WHERE RegisterMachine=@RegisterMachineFrom AND ChannelID=@ChannelIDFrom AND @MemberOrderTo<5;
+	UPDATE RecordMachineCountInfo SET ZcVipSum=ZcVipSum+@dwMoneyFrom,ZcVipCount=ZcVipCount+1 WHERE RegisterMachine=@RegisterMachineFrom AND ChannelID=@ChannelIDFrom AND @MemberOrderTo>=5;
+	UPDATE RecordMachineCountInfo SET ZrPtSum=ZrPtSum+@dwMoneyFrom,ZrPtCount=ZrPtCount+1 WHERE RegisterMachine=@RegisterMachineTo AND ChannelID=@ChannelIDTo AND @MemberOrderFrom<5;
+	UPDATE RecordMachineCountInfo SET ZrVipSum=ZrVipSum+@dwMoneyFrom,ZrVipCount=ZrVipCount+1 WHERE RegisterMachine=@RegisterMachineTo AND ChannelID=@ChannelIDTo AND @MemberOrderFrom>=5;
+
+	UPDATE RecordMachineDayCount SET ZcPtSum=ZcPtSum+@dwMoneyFrom,ZcPtCount=ZcPtCount+1 WHERE RegisterMachine=@RegisterMachineFrom AND ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate AND @MemberOrderTo<5;
+	UPDATE RecordMachineDayCount SET ZcVipSum=ZcVipSum+@dwMoneyFrom,ZcVipCount=ZcVipCount+1 WHERE RegisterMachine=@RegisterMachineFrom AND ChannelID=@ChannelIDFrom AND InsertDate=@TodayDate AND @MemberOrderTo>=5;
+	UPDATE RecordMachineDayCount SET ZrPtSum=ZrPtSum+@dwMoneyFrom,ZrPtCount=ZrPtCount+1 WHERE RegisterMachine=@RegisterMachineTo AND ChannelID=@ChannelIDTo AND InsertDate=@TodayDate AND @MemberOrderFrom<5;
+	UPDATE RecordMachineDayCount SET ZrVipSum=ZrVipSum+@dwMoneyFrom,ZrVipCount=ZrVipCount+1 WHERE RegisterMachine=@RegisterMachineTo AND ChannelID=@ChannelIDTo AND InsertDate=@TodayDate AND @MemberOrderFrom>=5;
+
+	select @zzrFrom=sum([ZcPtCount]+[ZcVipCount]+[ZrPtCount]+[ZrVipCount]+[RechargeCount])  FROM [THRecordDB].[dbo].[RecordUserCountInfo](nolock) where [UserID] = @dwUserIDFrom
+	select @zzrTo=sum([ZcPtCount]+[ZcVipCount]+[ZrPtCount]+[ZrVipCount]+[RechargeCount])  FROM [THRecordDB].[dbo].[RecordUserCountInfo](nolock) where [UserID] = @dwUserIDTo
+	if @zzrFrom = 1
+		UPDATE RecordChannelList SET Recharge_ct=Recharge_ct+1 WHERE ChannelID=@ChannelIDFrom;
+		UPDATE THRecordDB.dbo.RecordChannelDayCount SET Recharge_count=Recharge_count+1 where ChannelID=@ChannelIDFrom and TypeID=@IosAndroidFrom and InsertDate=@TodayDate
+	if @zzrTo = 1
+		UPDATE RecordChannelList SET Recharge_ct=Recharge_ct+1 WHERE ChannelID=@ChannelIDTo;
+		UPDATE THRecordDB.dbo.RecordChannelDayCount SET Recharge_count=Recharge_count+1 where ChannelID=@ChannelIDTo and TypeID=@IosAndroidTo and InsertDate=@TodayDate
+END
+
+RETURN 0
+
+GO
+
+
+----------------------------------------------------------------------------------------------------
+
+-- 游戏转帐
+CREATE PROC GSP_GR_DJ_PuTong2Vip
+
+	-- 用户信息
+	@dwUserID INT,								-- 用户 I D
+	@dwChannelIDVip INT,						-- Vip
+	@dwMoney BIGINT								-- 输赢金额
+
+WITH ENCRYPTION AS
+
+-- 属性设置
+SET NOCOUNT ON
+
+-- 执行逻辑
+BEGIN
+	DECLARE @PlatformID INT
+	DECLARE @IosAndroid INT
+	SET @PlatformID = 0;
+	SET @IosAndroid = 1;
+	SELECT TOP 1 @PlatformID=PlatformID FROM [THAccountsDB].[dbo].[AccountsInfo] WHERE UserID=@dwUserID ORDER BY UserID DESC
+	IF @PlatformID=1002
+	BEGIN
+		SET @IosAndroid = 2;
+	END
+
+	DECLARE @TodayDate DATE
+	SET @TodayDate = CAST(GETDATE() AS DATE)
+	DECLARE @ChannelID INT
+	DECLARE	@RegisterMachine NVARCHAR(32)
+	SET @ChannelID = 0
+	SET @RegisterMachine = NULL
+	SELECT @ChannelID=ChannelID FROM THAccountsDBLink.THAccountsDB.dbo.AccountsChannel WHERE UserID=@dwUserID;
+	SELECT @RegisterMachine=RegisterMachine FROM THAccountsDBLink.THAccountsDB.dbo.AccountsInfo WHERE UserID=@dwUserID;
+
+	UPDATE RecordUserCountInfo SET ZzSum=ZzSum+@dwMoney,ZzCount=ZzCount+1,ZcVipSum=ZcVipSum+@dwMoney,ZcVipCount=ZcVipCount+1 WHERE UserID=@dwUserID;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordUserCountInfo(UserID, ZzSum, ZzCount, ZcVipSum, ZcVipCount) VALUES(@dwUserID, @dwMoney, 1, @dwMoney, 1);
+	END
+
+	UPDATE RecordUserDayCount SET ZzSum=ZzSum+@dwMoney,ZzCount=ZzCount+1,ZcVipSum=ZcVipSum+@dwMoney,ZcVipCount=ZcVipCount+1 WHERE UserID=@dwUserID AND InsertDate=@TodayDate;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordUserDayCount(UserID, ZzSum, ZzCount, ZcVipSum, ZcVipCount) VALUES(@dwUserID, @dwMoney, 1, @dwMoney, 1);
+	END
+
+	UPDATE RecordMachineCountInfo SET ZzSum=ZzSum+@dwMoney,ZzCount=ZzCount+1,ZcVipSum=ZcVipSum+@dwMoney,ZcVipCount=ZcVipCount+1 WHERE RegisterMachine=@RegisterMachine;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordMachineCountInfo(RegisterMachine, ZzSum, ZzCount, ZcVipSum, ZcVipCount) VALUES(@RegisterMachine, @dwMoney, 1, @dwMoney, 1);
+	END
+
+	UPDATE RecordMachineDayCount SET ZzSum=ZzSum+@dwMoney,ZzCount=ZzCount+1,ZcVipSum=ZcVipSum+@dwMoney,ZcVipCount=ZcVipCount+1 WHERE RegisterMachine=@RegisterMachine AND InsertDate=@TodayDate;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordMachineDayCount(RegisterMachine, ZzSum, ZzCount, ZcVipSum, ZcVipCount) VALUES(@RegisterMachine, @dwMoney, 1, @dwMoney, 1);
+	END
+
+	UPDATE RecordChannelDayCount SET Insure_sum=Insure_sum+@dwMoney WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, Insure_sum, InsertDate, TypeID) VALUES(@ChannelID, @dwMoney, @TodayDate, @IosAndroid);
+	END
+END
+
+RETURN 0
+
+GO
+
+
+
+----------------------------------------------------------------------------------------------------
+
+-- 游戏转帐
+CREATE PROC GSP_GR_DJ_Vip2PuTong
+
+	-- 用户信息
+	@dwUserID INT,								-- 用户 I D
+	@dwChannelIDVip INT,						-- Vip
+	@dwMoney BIGINT								-- 输赢金额
+
+WITH ENCRYPTION AS
+
+-- 属性设置
+SET NOCOUNT ON
+
+-- 执行逻辑
+BEGIN
+	DECLARE @PlatformID INT
+	DECLARE @IosAndroid INT
+	SET @PlatformID = 0;
+	SET @IosAndroid = 1;
+	SELECT TOP 1 @PlatformID=PlatformID FROM [THAccountsDB].[dbo].[AccountsInfo] WHERE UserID=@dwUserID ORDER BY UserID DESC
+	IF @PlatformID=1002
+	BEGIN
+		SET @IosAndroid = 2;
+	END
+
+	DECLARE @TodayDate DATE
+	SET @TodayDate = CAST(GETDATE() AS DATE)
+	DECLARE @ChannelID INT
+	DECLARE	@RegisterMachine NVARCHAR(32)
+	SET @ChannelID = 0
+	SET @RegisterMachine = NULL
+	SELECT @ChannelID=ChannelID FROM THAccountsDBLink.THAccountsDB.dbo.AccountsChannel WHERE UserID=@dwUserID;
+	SELECT @RegisterMachine=RegisterMachine FROM THAccountsDBLink.THAccountsDB.dbo.AccountsInfo WHERE UserID=@dwUserID;
+
+	UPDATE RecordUserCountInfo SET ZzSum=ZzSum+@dwMoney,ZzCount=ZzCount+1,ZrVipSum=ZrVipSum+@dwMoney,ZrVipCount=ZrVipCount+1 WHERE UserID=@dwUserID;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordUserCountInfo(UserID, ZzSum, ZzCount, ZrVipSum, ZrVipCount) VALUES(@dwUserID, @dwMoney, 1, @dwMoney, 1);
+	END
+
+	UPDATE RecordUserDayCount SET ZzSum=ZzSum+@dwMoney,ZzCount=ZzCount+1,ZrVipSum=ZrVipSum+@dwMoney,ZrVipCount=ZrVipCount+1 WHERE UserID=@dwUserID AND InsertDate=@TodayDate;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordUserDayCount(UserID, ZzSum, ZzCount, ZrVipSum, ZrVipCount) VALUES(@dwUserID, @dwMoney, 1, @dwMoney, 1);
+	END
+
+	UPDATE RecordMachineCountInfo SET ZzSum=ZzSum+@dwMoney,ZzCount=ZzCount+1,ZrVipSum=ZrVipSum+@dwMoney,ZrVipCount=ZrVipCount+1 WHERE RegisterMachine=@RegisterMachine;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordMachineCountInfo(RegisterMachine, ZzSum, ZzCount, ZrVipSum, ZrVipCount) VALUES(@RegisterMachine, @dwMoney, 1, @dwMoney, 1);
+	END
+
+	UPDATE RecordMachineDayCount SET ZzSum=ZzSum+@dwMoney,ZzCount=ZzCount+1,ZrVipSum=ZrVipSum+@dwMoney,ZrVipCount=ZrVipCount+1 WHERE RegisterMachine=@RegisterMachine AND InsertDate=@TodayDate;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordMachineDayCount(RegisterMachine, ZzSum, ZzCount, ZrVipSum, ZrVipCount) VALUES(@RegisterMachine, @dwMoney, 1, @dwMoney, 1);
+	END
+
+	UPDATE RecordChannelDayCount SET Insure_sum=Insure_sum+@dwMoney WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, Insure_sum, InsertDate, TypeID) VALUES(@ChannelID, @dwMoney, @TodayDate, @IosAndroid);
+	END
+END
+
+RETURN 0
+
+GO
+
+
+
+----------------------------------------------------------------------------------------------------
+
+-- 游戏转帐
+CREATE PROC GSP_GR_DJ_Vip2Vip
+
+	-- 用户信息
+	@ChannelIDVipFrom INT,					-- Vip
+	@ChannelIDVipTo INT,						-- Vip
+	@dwMoney BIGINT								-- 输赢金额
+
+WITH ENCRYPTION AS
+
+-- 属性设置
+SET NOCOUNT ON
+
+-- 执行逻辑
+BEGIN
+	DECLARE @PlatformID INT
+	DECLARE @IosAndroid INT
+	SET @PlatformID = 0;
+	SET @IosAndroid = 1;
+	--SELECT TOP 1 @PlatformID=PlatformID FROM [THAccountsDB].[dbo].[AccountsInfo] WHERE RegisterMachine=@RegisterMachine ORDER BY UserID DESC
+	IF @PlatformID=1002
+	BEGIN
+		SET @IosAndroid = 2;
+	END
+
+	DECLARE @TodayDate DATE
+	SET @TodayDate = CAST(GETDATE() AS DATE)
+	UPDATE RecordChannelDayCount SET Insure_sum=Insure_sum+@dwMoney WHERE ChannelID=@ChannelIDVipFrom AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, Insure_sum, InsertDate, TypeID) VALUES(@ChannelIDVipFrom, @dwMoney, @TodayDate, @IosAndroid);
+	END
+END
+
+RETURN 0
+
+GO
+
+
+----------------------------------------------------------------------------------------------------
+
+-- 激活
+CREATE PROC GSP_GR_DJ_JiHuo
+
+	-- 用户信息
+	@ChannelID INT,								-- UserID
+	@PlatformID INT,								-- UserID
+	@RegisterMachine NVARCHAR(32)
+
+WITH ENCRYPTION AS
+
+-- 属性设置
+SET NOCOUNT ON
+
+-- 执行逻辑
+BEGIN
+	DECLARE @IosAndroid INT
+	-- SET @IosAndroid = (CASE WHEN(@PlatformID=1002) THEN 2 ELSE 1 END);
+	if LEFT(@PlatformID,1) = 1   -- 以1开头为苹果
+	Begin
+	    SET @IosAndroid=2  
+	End
+	Else if LEFT(@PlatformID,1) = 2  -- 以2开头为安卓
+	Begin
+	   SET @IosAndroid=1 
+	End
+	else 
+	Begin
+	   SET @IosAndroid=3             -- 以3开头为PC
+	End
+
+	DECLARE @TodayDateTime DATETIME
+	SET @TodayDateTime = GETDATE()
+	DECLARE @TodayDate DATE
+	SET @TodayDate = CAST(@TodayDateTime AS DATE)
+	DECLARE @RegisterDay INT
+	SET @RegisterDay = 0
+	SELECT TOP 1 @RegisterDay=DATEDIFF(day,InsertDate,@TodayDate) FROM RecordMachineCountInfo WHERE RegisterMachine=@RegisterMachine AND ChannelID=@ChannelID;
+
+	UPDATE RecordMachineCountInfo SET JiHuoDate=@TodayDate WHERE (JiHuoDate=0 or datediff(day,JiHuoDate,getdate())<1 ) AND RegisterMachine=@RegisterMachine AND ChannelID=@ChannelID;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordMachineCountInfo(RegisterMachine, JiHuoDate, InsertDate, ChannelID) VALUES(@RegisterMachine, @TodayDate, @TodayDate, @ChannelID);
+	END
+	ELSE
+	BEGIN
+		UPDATE RecordChannelDayCount SET Active=Active+1 WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+		IF @@ROWCOUNT=0
+		BEGIN
+			INSERT INTO RecordChannelDayCount(ChannelID, Active, InsertDate, TypeID) VALUES(@ChannelID, 1, @TodayDate, @IosAndroid);
+		END
+		IF @RegisterDay=1
+		BEGIN
+			UPDATE RecordChannelDayCount SET Liucun_1=Liucun_1+1 WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+		END
+		IF @RegisterDay=7
+		BEGIN
+			UPDATE RecordChannelDayCount SET Liucun_7=Liucun_7+1 WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+		END
+	END
+END
+
+RETURN 0
+
+GO
+
+
+
+----------------------------------------------------------------------------------------------------
+
+-- 激活
+CREATE PROC GSP_GR_DJ_Reg
+
+	-- 用户信息
+	@ChannelID INT,								-- UserID
+	@PlatformID INT,							-- PlatformID	
+	@strClientIP NVARCHAR(15),					-- 连接地址
+	@RegisterMachine NVARCHAR(32)
+
+WITH ENCRYPTION AS
+
+-- 属性设置
+SET NOCOUNT ON
+
+-- 执行逻辑
+BEGIN
+	DECLARE @IosAndroid INT
+	-- SET @IosAndroid = (CASE WHEN(@PlatformID=1002) THEN 2 ELSE 1 END);
+	--   9.25------
+	if LEFT(@PlatformID,1) = 1   -- 以1开头为苹果
+	Begin
+	    SET @IosAndroid=2  
+	End
+	Else if LEFT(@PlatformID,1) = 2  -- 以2开头为安卓
+	Begin
+	   SET @IosAndroid=1 
+	End
+	else 
+	Begin
+	   SET @IosAndroid=3             -- 以3开头为PC
+	End
+
+	-- SELECT TOP 1 @ChannelID=ChannelID from [dbo].[RecordChannelOpen] WHERE IP=@strClientIP ORDER BY RecordID DESC
+
+	DECLARE @TodayDateTime DATETIME
+	SET @TodayDateTime = GETDATE()
+	DECLARE @TodayDate DATE
+	SET @TodayDate = CAST(@TodayDateTime AS DATE)
+
+	UPDATE RecordChannelList SET Reg_sum=Reg_sum+1 WHERE ChannelID=@ChannelID;
+
+
+	UPDATE RecordChannelDayCount SET Reg=Reg+1 WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+	IF @@ROWCOUNT=0
+	BEGIN
+		INSERT INTO RecordChannelDayCount(ChannelID, InsertDate, TypeID, Reg) VALUES(@ChannelID, @TodayDate, @IosAndroid, 1);
+	END
+
+	IF (SELECT COUNT(*) FROM RecordMachineCountInfo WHERE RegisterMachine=@RegisterMachine and ChannelID<>0 and (ChannelID < 1000 or ChannelID > 4000) )=0
+	BEGIN
+		INSERT INTO RecordMachineCountInfo(RegisterMachine, InsertDate, ChannelID) VALUES(@RegisterMachine, @TodayDate, @ChannelID);
+		UPDATE RecordChannelDayCount SET New_Reg=New_Reg+1 WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+		UPDATE RecordChannelList SET Mac_Reg=Mac_Reg+1 WHERE ChannelID=@ChannelID;
+	END
+
+	IF (SELECT COUNT(*) FROM RecordMachineDayCount WHERE RegisterMachine=@RegisterMachine AND ChannelID=@ChannelID AND InsertDate=@TodayDate)=0
+	BEGIN
+		INSERT INTO RecordMachineDayCount(RegisterMachine, InsertDate, ChannelID) VALUES(@RegisterMachine, @TodayDate, @ChannelID);
+		UPDATE RecordChannelDayCount SET Mac_Reg=Mac_Reg+1 WHERE ChannelID=@ChannelID AND InsertDate=@TodayDate AND TypeID=@IosAndroid;
+	END
+
+END
+
+RETURN 0
+
+GO
+
